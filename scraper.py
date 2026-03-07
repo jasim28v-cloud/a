@@ -1,105 +1,134 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+import random
 
-def run_kooora_clone():
+def run_stadium_ultra():
     rss_url = "https://arabic.rt.com/rss/sport/"
-    headers = {'User-Agent': 'Mozilla/5.0'}
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
     
     try:
-        # رابطك الربحي
+        # الرابط الربحي الترا (Direct Link)
         my_link = "Https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default"
         
-        response = requests.get(rss_url, headers=headers)
+        response = requests.get(rss_url, headers=headers, timeout=20)
         response.encoding = 'utf-8'
         soup = BeautifulSoup(response.content, 'xml')
         items = soup.find_all('item')
 
-        # كود HTML بتصميم كووورة الأصلي
-        html_content = f'''<!DOCTYPE html>
+        # 1. توليد جدول مباريات "وهمي" احترافي (لجذب النقرات)
+        matches_list = [
+            {"l": "الدوري الإسباني", "t1": "ريال مدريد", "t2": "برشلونة", "s": "21:00"},
+            {"l": "الدوري الإنجليزي", "t1": "ليفربول", "t2": "مان سيتي", "s": "18:30"},
+            {"l": "دوري أبطال أوروبا", "t1": "بايرن ميونخ", "t2": "باريس", "s": "مباشر"}
+        ]
+        
+        matches_html = ""
+        for m in matches_list:
+            matches_html += f'''
+            <div class="m-item">
+                <span class="m-lg">{m['l']}</span>
+                <div class="m-teams">
+                    <span>{m['t1']}</span>
+                    <span class="m-vs">{m['s']}</span>
+                    <span>{m['t2']}</span>
+                </div>
+                <a href="{my_link}" target="_blank" class="m-link">التفاصيل</a>
+            </div>'''
+
+        # 2. معالجة الأخبار بتنسيق Prime Ultra
+        news_html = ""
+        for i, item in enumerate(items[:25]):
+            title = item.title.text
+            img = item.find('enclosure').get('url') if item.find('enclosure') else "https://via.placeholder.com/600x400"
+            
+            # قالب الخبر "طبق الأصل" كووورة
+            news_html += f'''
+            <div class="k-item">
+                <a href="{my_link}" target="_blank" class="k-wrap">
+                    <div class="k-img"><img src="{img}" alt="news"></div>
+                    <div class="k-info">
+                        <h2>{title}</h2>
+                        <div class="k-meta">
+                            <span class="k-cat">كرة قدم عالمية</span>
+                            <span class="k-time">⏱️ منذ قليل</span>
+                        </div>
+                    </div>
+                </a>
+            </div>'''
+            
+            # بنر إعلاني "برايم" في منتصف الأخبار
+            if i == 3:
+                news_html += f'''
+                <div class="k-ad-prime">
+                    <a href="{my_link}" target="_blank">
+                        <div class="ad-tag">حصري</div>
+                        <h3>شاهد البث المباشر لمباريات اليوم بجودة عالية 📺</h3>
+                        <p>اضغط هنا للدخول لصفحة البث المباشر</p>
+                    </a>
+                </div>'''
+
+        # 3. بناء صفحة HTML الترا
+        full_html = f'''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كووورة - Stadium 24</title>
+    <title>ستاديوم 24 | كووورة الترا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body {{ background-color: #efefef; font-family: tahoma, arial, sans-serif; margin: 0; padding: 0; }}
-        header {{ background-color: #fff; border-bottom: 5px solid #ffcc00; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }}
-        .logo {{ font-weight: bold; font-size: 28px; color: #ffcc00; text-decoration: none; font-style: italic; }}
-        .logo span {{ color: #000; }}
+        :root {{ --main: #ffcc00; --bg: #efefef; --dark: #333; }}
+        body {{ background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; padding-top: 110px; }}
         
-        /* شريط المباريات */
-        .matches-container {{ background: #fff; margin: 10px auto; max-width: 1000px; border: 1px solid #ccc; display: flex; overflow-x: auto; }}
-        .match-box {{ min-width: 150px; border-left: 1px solid #eee; padding: 10px; text-align: center; font-size: 12px; }}
-        .match-box .league {{ color: #999; font-size: 10px; display: block; }}
-        .match-box .score {{ background: #fdf2c4; font-weight: bold; padding: 2px 5px; margin: 5px 0; display: inline-block; }}
-        
-        /* القائمة الرئيسية */
-        nav {{ background: #333; color: #fff; padding: 8px 20px; font-size: 13px; font-weight: bold; }}
-        nav span {{ margin-left: 20px; cursor: pointer; }}
-        .live-icon {{ color: #ffcc00; }}
+        /* Navbar Prime */
+        nav {{ background: #fff; border-bottom: 4px solid var(--main); position: fixed; top: 0; width: 100%; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
+        .nav-top {{ display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; }}
+        .logo {{ font-size: 30px; font-weight: 900; color: #000; text-decoration: none; font-style: italic; }}
+        .logo span {{ color: var(--main); }}
+        .live-btn {{ background: red; color: #fff; padding: 2px 10px; border-radius: 4px; font-size: 12px; animation: blink 1s infinite; }}
+        @keyframes blink {{ 50% {{ opacity: 0; }} }}
 
-        /* الأخبار */
-        .content-wrapper {{ max-width: 1000px; margin: 10px auto; display: flex; gap: 10px; }}
-        .main-news {{ background: #fff; flex: 3; border: 1px solid #ccc; padding: 10px; }}
-        .news-entry {{ border-bottom: 1px solid #eee; padding: 10px 0; display: flex; gap: 10px; }}
-        .news-entry img {{ width: 150px; height: 100px; object-fit: cover; border: 1px solid #ddd; }}
-        .news-entry h3 {{ margin: 0; font-size: 16px; color: #003366; }}
-        .news-entry a {{ text-decoration: none; }}
-        
-        /* الإعلانات */
-        .ad-banner {{ background: #fffde7; border: 1px solid #ffe58f; padding: 10px; text-align: center; margin-bottom: 10px; font-size: 14px; font-weight: bold; }}
-        .ad-link {{ color: #d4a017; text-decoration: none; }}
+        /* Matches Ultra Strip */
+        .m-strip {{ background: #fff; display: flex; overflow-x: auto; padding: 10px; gap: 10px; border-bottom: 1px solid #ddd; }}
+        .m-item {{ min-width: 160px; background: #fafafa; border: 1px solid #eee; border-radius: 4px; padding: 8px; text-align: center; }}
+        .m-lg {{ font-size: 10px; color: #999; display: block; }}
+        .m-teams {{ font-size: 12px; font-weight: bold; margin: 5px 0; display: flex; justify-content: space-between; align-items: center; }}
+        .m-vs {{ background: #fff2c4; padding: 2px 5px; font-size: 10px; border-radius: 3px; }}
+        .m-link {{ font-size: 11px; color: #0066cc; text-decoration: none; font-weight: bold; }}
 
-        @media (max-width: 600px) {{
-            .content-wrapper {{ flex-direction: column; }}
-            .news-entry img {{ width: 100px; height: 70px; }}
-        }}
+        /* News Layout Ultra */
+        .container {{ max-width: 900px; margin: 0 auto; padding: 10px; }}
+        .k-item {{ background: #fff; margin-bottom: 10px; border-bottom: 1px solid #ddd; transition: 0.3s; }}
+        .k-wrap {{ text-decoration: none; color: inherit; display: flex; }}
+        .k-img {{ width: 140px; height: 95px; flex-shrink: 0; }}
+        .k-img img {{ width: 100%; height: 100%; object-fit: cover; }}
+        .k-info {{ padding: 10px; flex-grow: 1; }}
+        .k-info h2 {{ font-size: 16px; margin: 0 0 8px 0; color: #003366; line-height: 1.4; }}
+        .k-meta {{ font-size: 11px; color: #888; display: flex; gap: 15px; }}
+        .k-cat {{ color: #d4a017; font-weight: bold; }}
+
+        /* Ad Prime Ultra */
+        .k-ad-prime {{ background: #fffbe6; border: 2px dashed var(--main); margin: 15px 0; padding: 20px; text-align: center; border-radius: 8px; }}
+        .k-ad-prime a {{ text-decoration: none; color: #333; }}
+        .ad-tag {{ background: var(--main); display: inline-block; padding: 2px 12px; border-radius: 20px; font-size: 10px; font-weight: 900; }}
+        .k-ad-prime h3 {{ margin: 10px 0; color: #d32f2f; }}
+
+        @media (max-width: 600px) {{ .k-img {{ width: 110px; height: 80px; }} .k-info h2 {{ font-size: 14px; }} }}
     </style>
 </head>
 <body>
-    <header>
-        <a href="#" class="logo">K<span>OOORA</span></a>
-        <div style="font-size: 12px;">{datetime.now().strftime("%d مارس 2026")}</div>
-    </header>
-    
     <nav>
-        <span class="live-icon">● مباشر</span>
-        <span>مباريات اليوم</span>
-        <span>أخبار</span>
-        <span>مسابقات</span>
-    </nav>
-
-    <div class="matches-container">
-        <div class="match-box"><span class="league">الدوري الإسباني</span><div>ريال مدريد</div><span class="score">2 - 0</span><div>سيلتا فيغو</div></div>
-        <div class="match-box"><span class="league">الدوري الإنجليزي</span><div>ليفربول</div><span class="score">1 - 1</span><div>مان سيتي</div></div>
-        <div class="match-box"><span class="league">الدوري الإيطالي</span><div>يوفنتوس</div><span class="score">0 - 0</span><div>إنتر ميلان</div></div>
-    </div>
-
-    <div class="content-wrapper">
-        <div class="main-news">
-            <div class="ad-banner">
-                <a href="{my_link}" target="_blank" class="ad-link">إعلان: حمل تطبيق كووورة الرسمي للحصول على التنبيهات مجاناً</a>
-            </div>
-            
-            {" ".join([f'''
-            <div class="news-entry">
-                <img src="{item.find('enclosure').get('url') if item.find('enclosure') else ''}">
-                <div>
-                    <a href="{my_link}" target="_blank"><h3>{item.title.text}</h3></a>
-                    <p style="font-size: 12px; color: #666;">{item.pubDate.text if item.pubDate else ''}</p>
-                </div>
-            </div>
-            ''' for item in items[:15]])}
+        <div class="nav-top">
+            <a href="#" class="logo">K<span>OOORA</span> 24</a>
+            <div class="live-btn">● مباشر الآن</div>
         </div>
-    </div>
+        <div class="m-strip">{matches_html}</div>
+    </nav>
+    <div class="container">{news_html}</div>
 </body>
 </html>'''
 
-        with open("index.html", "w", encoding="utf-8") as f:
-            f.write(html_content)
-    except Exception as e:
-        print(f"Error: {e}")
+        with open("index.html", "w", encoding="utf-8") as f: f.write(full_html)
+    except Exception as e: print(f"Error: {e}")
 
-if __name__ == "__main__":
-    run_kooora_clone()
+if __name__ == "__main__": run_stadium_ultra()
