@@ -3,306 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ستاديوم 24 | VORTEX</title>
+    <title>VORTEX 26 | NEWS</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0b0d11; --card: #161a21; --gold: #c5a059; --text: #e1e1e1; }
-        body { background: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
+        :root { --v-bg: #0a0b0e; --v-card: #12151a; --v-gold: #c5a059; --v-white: #ffffff; }
+        body { background: var(--v-bg); color: var(--v-white); font-family: 'Cairo', sans-serif; margin: 0; padding-bottom: 50px; }
         
-        header { background: var(--card); padding: 15px 5%; display: flex; justify-content: space-between; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 24px; font-weight: 900; color: #fff; text-decoration: none; }
-        .logo span { color: var(--gold); }
+        header { background: var(--v-card); padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--v-gold); position: sticky; top: 0; z-index: 1000; }
+        .v-logo { font-size: 26px; font-weight: 900; color: #fff; text-decoration: none; }
+        .v-logo span { color: var(--v-gold); }
 
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .v-main { max-width: 700px; margin: 0 auto; padding: 0 15px; }
 
-        /* مركز المباريات العلوي (مثل كووورة) */
-        .match-scroller { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 25px; scrollbar-width: none; }
-        .m-card { background: var(--card); min-width: 180px; padding: 12px; border-radius: 12px; border: 1px solid #252a33; text-align: center; }
-        .m-team { font-size: 12px; font-weight: bold; margin: 5px 0; }
-        .m-score { background: var(--gold); color: #000; font-weight: 900; padding: 2px 8px; border-radius: 4px; display: inline-block; }
+        /* تصميم الخبر الرئيسي */
+        .v-hero { position: relative; width: 100%; height: 380px; border-radius: 0 0 20px 20px; overflow: hidden; margin-bottom: 25px; border: 1px solid #1f242d; }
+        .v-hero img { width: 100%; height: 100%; object-fit: cover; }
+        .v-hero-info { position: absolute; bottom: 0; width: 100%; padding: 40px 20px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); box-sizing: border-box; }
+        .v-tag-live { background: #ed1c24; padding: 2px 12px; font-size: 11px; font-weight: 900; border-radius: 4px; }
+        .v-hero h3 { font-size: 22px; margin: 12px 0; line-height: 1.5; }
 
-        /* شبكة الأخبار المربعة (مثل سكاي نيوز) */
-        .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .n-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #232932; transition: 0.3s; }
-        .n-card:hover { transform: translateY(-5px); border-color: var(--gold); }
-        .n-card a { text-decoration: none; color: inherit; }
-        .n-img { position: relative; height: 180px; }
-        .n-img img { width: 100%; height: 100%; object-fit: cover; }
-        .n-badge { position: absolute; top: 10px; right: 10px; background: var(--gold); color: #000; font-size: 10px; font-weight: 900; padding: 3px 10px; border-radius: 5px; }
+        /* تصميم الكروت المطورة */
+        .v-premium-card { background: var(--v-card); border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #1c2128; transition: 0.3s; }
+        .v-premium-card:hover { border-color: var(--v-gold); transform: translateY(-3px); }
+        .v-premium-card a { text-decoration: none; color: inherit; }
+        .v-img-box { position: relative; width: 100%; height: 240px; }
+        .v-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .v-exclusive { position: absolute; top: 15px; right: 15px; background: var(--v-gold); color: #000; font-size: 10px; font-weight: 900; padding: 3px 10px; border-radius: 4px; }
         
-        .n-info { padding: 15px; }
-        .n-info h3 { font-size: 15px; margin: 0 0 15px 0; line-height: 1.6; height: 48px; overflow: hidden; font-weight: 700; }
-        .n-footer { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #888; }
-        .n-more { color: var(--gold); border: 1px solid var(--gold); padding: 2px 10px; border-radius: 20px; }
+        .v-details { padding: 20px; }
+        .v-details h3 { font-size: 18px; margin: 0 0 20px; line-height: 1.6; font-weight: 700; }
+        .v-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232a33; padding-top: 15px; }
+        .v-btn { color: var(--v-gold); font-size: 12px; font-weight: 900; text-transform: uppercase; border-bottom: 1px solid var(--v-gold); }
+        .v-time { font-size: 11px; color: #777; }
 
-        footer { background: #000; padding: 40px; text-align: center; border-top: 2px solid var(--gold); margin-top: 50px; }
-        
-        @media (max-width: 768px) {
-            .news-grid { grid-template-columns: 1fr; }
-            .n-img { height: 220px; }
+        @media (max-width: 600px) {
+            .v-hero { height: 300px; }
+            .v-img-box { height: 200px; }
+            .v-details h3 { font-size: 16px; }
         }
     </style>
 </head>
 <body>
     <header>
-        <a href="#" class="logo">VORTEX<span>26</span></a>
-        <div style="color: #00ff88; font-size: 13px; font-weight: bold;">● مباشر</div>
+        <div style="color: #00ff88; font-size: 12px; font-weight: bold;">● مباشر الآن</div>
+        <a href="#" class="v-logo">VORTEX<span>26</span></a>
     </header>
 
-    <div class="container">
-        <div class="match-scroller">
-            
-        </div>
-
-        <h2 style="border-right: 5px solid var(--gold); padding-right: 15px; margin-bottom: 25px;">أبرز الأخبار الآن</h2>
-        <div class="news-grid">
-            
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac4dd542360464a47c8d06.png" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>رونالدو يبعث برسالة من مدريد قبل لقاء النصر الهام أمام نيوم</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac3ed44c59b70b5444888e.png" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>رئيس "الفيفا" يفاجئ الركراكي بعد رحيله عن تدريب المنتخب المغربي</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac375b42360463ff6c0bb3.jpeg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>أرني سلوت يحث نجم ليفربول الصاعد على الاقتداء بمحمد صلاح</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac2eed42360464a47c8cd9.jpeg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>الاتحادان الدولي والأوروبي لكرة اليد يعيدان المنتخبات الشبابية الروسية للمحافل الدولية</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac21924c59b71062425943.png" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>ترتيب الدوري المصري بعد فوز الزمالك على الاتحاد السكندري</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac1e3e423604294e372dac.png" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>بوغاييف يهدي روسيا ميدالية ثانية في بارالمبياد "ميلانو- كورتينا 2026"</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac174d4c59b7092f5d3997.png" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>محرز يواصل تألقه في "ديربي جدة" ويتمسك بوعده لجماهير الأهلي</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac11964c59b70e3765e837.png" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>اعتقال شخص ادعى بأنه ابن ماردونا في قضية مخدرات</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac125a4c59b70c865886b1.jpg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>برسالة غامضة على "إنستغرام".. زيزو يثير الجدل (فيديو -صورة)</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac13184236042746012c72.png" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>روسيا تحرز أول ميدالية لها في دورة الألعاب البارالمبية بإيطاليا</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac0eec423604267c7bbd5e.jpg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>ترتيب الدوري الإسباني بعد فوز ريال مدريد على سيلتا فيغو</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac05dd4c59b7092f5d397d.jpg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>رد فعل الوليد بن طلال بعد اكتساح الهلال للنجمة (فيديو)</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abea034c59b70c1953ce2a.jpg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>"اختفى الكارهون فجأة".. ردود أفعال جماهير ليفربول على أداء محمد صلاح أمام ولفرهامبتون (صور)</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abdef5423604255c654ed4.jpg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>دعوى قضائية جديدة تلاحق نيمار.. طباخة برازيلية سابقة تجره إلى المحاكم</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abda844c59b701e0259e1b.jpg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>إيفان توني يكشف سر احتفاله المثير في ديربي جدة (فيديو - صور)</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="n-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="n-img">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abd77f423604267c7bbd27.jpg" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>محمد صلاح يتفوق على واين روني ويرد عليه في الملعب (فيديو)</h3>
-                        <div class="n-footer">
-                            <span>⏱️ 16:47</span>
-                            <span class="n-more">التفاصيل</span>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+    <div class="v-main">
+        
     </div>
 
-    <footer>
-        <div style="font-size: 26px; font-weight: 900; color: #fff;">VORTEX 26</div>
-        <p style="font-size: 12px; color: #555;">تغطية رياضية عالمية بنمط المربعات الفخم</p>
+    <footer style="text-align: center; padding: 40px; font-size: 11px; color: #444;">
+        جميع الحقوق محفوظة لمنصة VORTEX 26 الإخبارية
     </footer>
 </body>
 </html>
