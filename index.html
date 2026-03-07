@@ -3,275 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ستاديوم 24 | القمة الرياضية</title>
+    <title>Infinity Stadium 24</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --p: #004d9c; --s: #ffcc00; --dark: #121212; --bg: #f8f9fa; }
-        body { background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; }
+        :root { --gold: #c5a059; --dark-bg: #0b0e11; --card-bg: #15191d; --text: #e1e1e1; }
+        body { background: var(--dark-bg); color: var(--text); font-family: 'Cairo', sans-serif; margin: 0; padding-bottom: 50px; }
         
-        /* Navbar */
-        nav { background: var(--p); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .nav-logo { font-size: 26px; font-weight: 900; color: #fff; text-decoration: none; }
-        .nav-logo span { color: var(--s); }
-        .live-pulse { background: #ff4757; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        /* Glassmorphism Navbar */
+        nav { background: rgba(21, 25, 29, 0.95); backdrop-filter: blur(10px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--gold); }
+        .logo { font-size: 26px; font-weight: 900; color: #fff; text-decoration: none; text-transform: uppercase; }
+        .logo span { color: var(--gold); }
 
-        /* Layout */
-        .main-wrapper { max-width: 1100px; margin: 20px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 0 15px; }
+        /* Main Grid Layout */
+        .container { max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: 1fr 380px; gap: 25px; padding: 0 15px; }
         
-        /* News Grid */
-        .news-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        .prime-card { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
-        .prime-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .prime-card a { text-decoration: none; color: inherit; display: flex; }
-        .card-img-wrap { width: 160px; height: 110px; position: relative; flex-shrink: 0; }
-        .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .card-badge { position: absolute; top: 5px; right: 5px; background: var(--s); font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; }
-        .card-body { padding: 12px; flex-grow: 1; }
-        .card-body h3 { font-size: 16px; margin: 0 0 10px 0; color: #333; line-height: 1.4; }
-        .card-footer-info { font-size: 11px; color: #888; }
+        /* News Section */
+        .news-title { font-size: 22px; font-weight: 900; border-right: 5px solid var(--gold); padding-right: 15px; margin-bottom: 20px; }
+        .news-card { background: var(--card-bg); border-radius: 15px; margin-bottom: 15px; overflow: hidden; transition: 0.3s; border: 1px solid #232a31; }
+        .news-card:hover { transform: scale(1.02); border-color: var(--gold); }
+        .news-card a { text-decoration: none; color: inherit; display: flex; }
+        .img-container { width: 180px; height: 120px; position: relative; flex-shrink: 0; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .news-tag { position: absolute; top: 8px; right: 8px; background: #e02f2f; color: white; padding: 2px 8px; font-size: 10px; font-weight: bold; border-radius: 4px; }
+        .news-info { padding: 15px; display: flex; flex-direction: column; justify-content: center; }
+        .news-info h3 { font-size: 16px; margin: 0 0 10px 0; line-height: 1.5; color: #fff; }
+        .news-meta { font-size: 11px; color: #888; }
 
-        /* Match Center Sidebar */
-        .sidebar { background: #fff; border-radius: 12px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); align-self: start; }
-        .league-header-ultra { background: var(--dark); color: #fff; padding: 8px 12px; font-size: 13px; font-weight: bold; margin: 15px 0 10px 0; border-radius: 4px; }
-        .ultra-match-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
-        .u-team { width: 35%; font-size: 12px; font-weight: bold; text-align: center; }
-        .u-score-area { width: 30%; text-align: center; }
-        .u-score-val { display: block; background: #fdf2c4; padding: 3px; border-radius: 4px; font-weight: 900; color: #d32f2f; }
-        .u-time { font-size: 10px; color: #999; }
-        .u-btn-live { display: block; margin-top: 5px; background: var(--p); color: #fff; text-decoration: none; font-size: 10px; padding: 2px 8px; border-radius: 4px; }
+        /* Live Score Sidebar */
+        .sidebar { background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid #232a31; align-self: start; }
+        .league-separator { background: var(--gold); color: #000; padding: 5px 15px; font-size: 12px; font-weight: bold; margin: 20px 0 10px 0; border-radius: 5px; }
+        .match-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #232a31; }
+        .m-team { width: 35%; font-size: 12px; font-weight: bold; text-align: center; color: #fff; }
+        .m-result { width: 30%; text-align: center; }
+        .m-score { background: #232a31; color: var(--gold); font-weight: 900; padding: 5px; border-radius: 8px; font-size: 14px; margin-bottom: 4px; }
+        .m-time { font-size: 10px; color: #888; }
+        .m-details { display: block; background: var(--gold); color: #000; text-decoration: none; font-size: 10px; font-weight: bold; padding: 4px; border-radius: 5px; margin-top: 5px; }
 
-        /* Footer Modern */
-        footer { background: #000; color: #fff; padding: 50px 20px; text-align: center; margin-top: 50px; border-top: 5px solid var(--s); }
-        .f-apps img { width: 120px; margin: 10px; transition: 0.3s; }
-        .f-apps img:hover { opacity: 0.7; }
-        .f-socials { margin: 30px 0; }
-        .f-socials a { color: #fff; font-size: 24px; margin: 0 15px; text-decoration: none; }
-        .f-bottom { border-top: 1px solid #333; padding-top: 20px; font-size: 12px; color: #777; }
+        /* Footer Black Pearl */
+        footer { background: #000; padding: 60px 20px; text-align: center; margin-top: 50px; border-top: 2px solid var(--gold); }
+        .f-logo { font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 20px; }
+        .f-socials a { color: var(--gold); font-size: 24px; margin: 0 15px; }
+        .f-apps img { width: 130px; margin: 15px 10px; border: 1px solid #333; border-radius: 8px; }
 
         @media (max-width: 900px) {
-            .main-wrapper { grid-template-columns: 1fr; }
+            .container { grid-template-columns: 1fr; }
             .sidebar { order: -1; }
-            .card-img-wrap { width: 120px; height: 90px; }
-            .card-body h3 { font-size: 14px; }
+            .img-container { width: 130px; height: 90px; }
         }
     </style>
 </head>
 <body>
     <nav>
-        <a href="#" class="nav-logo">STADIUM<span>24</span></a>
-        <div class="live-pulse">● مباشر</div>
+        <a href="#" class="logo">INFINITY<span>24</span></a>
+        <div style="color: var(--gold); font-size: 12px; font-weight: bold;"><i class="fas fa-circle" style="color: #e02f2f; font-size: 8px;"></i> مباشر الآن</div>
     </nav>
 
-    <div class="main-wrapper">
-        <div class="news-grid">
-            <h2 style="border-right: 4px solid var(--p); padding-right: 15px; margin-bottom: 20px;">أحدث الأخبار</h2>
+    <div class="container">
+        <div class="news-section">
+            <div class="news-title">أحدث التقارير الرياضية</div>
             
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac375b42360463ff6c0bb3.jpeg" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/wide\2026\2\15\ديانج-في-المباراة2026_2_15_18_18.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>أرني سلوت يحث نجم ليفربول الصاعد على الاقتداء بمحمد صلاح</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac2eed42360464a47c8cd9.jpeg" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\2\10\-2026_2_10_12_13.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>الاتحادان الدولي والأوروبي لكرة اليد يعيدان المنتخبات الشبابية الروسية للمحافل الدولية</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac21924c59b71062425943.png" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\1\9\lhgd-easy-resize-com2026_1_9_23_46.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>ترتيب الدوري المصري بعد فوز الزمالك على الاتحاد السكندري</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac1e3e423604294e372dac.png" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2025\11\4\ياسين-easy-resize-com2025_11_4_9_22.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>بوغاييف يهدي روسيا ميدالية ثانية في بارالمبياد "ميلانو- كورتينا 2026"</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac174d4c59b7092f5d3997.png" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\3\7\image-2026-03-07t142427-3032026_3_7_14_27.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>محرز يواصل تألقه في "ديربي جدة" ويتمسك بوعده لجماهير الأهلي</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac11964c59b70e3765e837.png" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\3\7\صراع2026_3_7_15_39.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>اعتقال شخص ادعى بأنه ابن ماردونا في قضية مخدرات</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac125a4c59b70c865886b1.jpg" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\3\7\gettyimages-2265243743-612x6122026_3_7_16_20.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>برسالة غامضة على "إنستغرام".. زيزو يثير الجدل (فيديو -صورة)</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac13184236042746012c72.png" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\3\7\624580307-1993964294887756-1990665168446053430-n2026_3_7_17_43.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>روسيا تحرز أول ميدالية لها في دورة الألعاب البارالمبية بإيطاليا</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac0eec423604267c7bbd5e.jpg" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\3\7\capture2026_3_7_17_10.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>ترتيب الدوري الإسباني بعد فوز ريال مدريد على سيلتا فيغو</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac05dd4c59b7092f5d397d.jpg" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\3\7\شباك2026_3_7_16_38.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>رد فعل الوليد بن طلال بعد اكتساح الهلال للنجمة (فيديو)</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abea034c59b70c1953ce2a.jpg" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\1\31\مصطفى2026_1_31_21_16.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>"اختفى الكارهون فجأة".. ردود أفعال جماهير ليفربول على أداء محمد صلاح أمام ولفرهامبتون (صور)</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abdef5423604255c654ed4.jpg" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                    <div class="img-container">
+                        <img src="https://mediayk.gemini.media/img/yallakora/meduim\2026\3\7\gettyimages-14974850082026_3_7_16_51.webp" loading="lazy">
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
-                        <h3>دعوى قضائية جديدة تلاحق نيمار.. طباخة برازيلية سابقة تجره إلى المحاكم</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
-                    </div>
-                </a>
-            </div>
-            <div class="prime-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abda844c59b701e0259e1b.jpg" loading="lazy">
-                        <div class="card-badge">حصري</div>
-                    </div>
-                    <div class="card-body">
-                        <h3>إيفان توني يكشف سر احتفاله المثير في ديربي جدة (فيديو - صور)</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
-                    </div>
-                </a>
-            </div>
-            <div class="prime-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abd77f423604267c7bbd27.jpg" loading="lazy">
-                        <div class="card-badge">حصري</div>
-                    </div>
-                    <div class="card-body">
-                        <h3>محمد صلاح يتفوق على واين روني ويرد عليه في الملعب (فيديو)</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
-                    </div>
-                </a>
-            </div>
-            <div class="prime-card">
-                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
-                    <div class="card-img-wrap">
-                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ab54b04c59b701f02746c8.png" loading="lazy">
-                        <div class="card-badge">حصري</div>
-                    </div>
-                    <div class="card-body">
-                        <h3>ريال مدريد ينتزع فوزا "قاتلا" على سيلتا فيغو في الدوري الإسباني</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                    <div class="news-info">
+                        <h3></h3>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ 15:59</div>
                     </div>
                 </a>
             </div>
         </div>
 
         <div class="sidebar">
-            <h2 style="margin-top:0; color: var(--p);"><i class="fas fa-trophy"></i> مركز المباريات</h2>
-            <div class="league-header-ultra">الدوري المصري</div><div class="league-header-ultra">الدوري الإسباني</div><div class="league-header-ultra">كأس الاتحاد الإنجليزي</div><div class="league-header-ultra">الدوري الإيطالي</div><div class="league-header-ultra">الدوري الفرنسي</div>
+            <h2 style="margin:0; font-size: 20px; color: var(--gold);"><i class="fas fa-bolt"></i> مركز النتائج الحية</h2>
+            <div class="league-separator">الدوري المصري</div><div class="league-separator">الدوري الإسباني</div><div class="league-separator">كأس الاتحاد الإنجليزي</div><div class="league-separator">الدوري الإيطالي</div>
         </div>
     </div>
 
     <footer>
-        <div style="font-size: 30px; font-weight: 900; margin-bottom: 10px;">YallaKora <span style="color: var(--s);">24</span></div>
-        <p>موقعك الرياضي الأول لمتابعة النتائج والأخبار لحظة بلحظة</p>
+        <div class="f-logo">INFINITY STADIUM</div>
+        <div class="f-socials">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
         <div class="f-apps">
             <img src="https://yallakora.com/images/badget-app-store.png">
             <img src="https://yallakora.com/images/badget-google-play.png">
         </div>
-        <div class="f-socials">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-        </div>
-        <div class="f-bottom">
-            <p>© جميع الحقوق محفوظة لـ ملاعب لايف | تم التطوير بأحدث تقنيات 2026</p>
-        </div>
+        <p style="font-size: 12px; color: #444; margin-top: 30px;">تم التطوير بواسطة ذكاء ستاديوم المتقدم 2026</p>
     </footer>
 </body>
 </html>
