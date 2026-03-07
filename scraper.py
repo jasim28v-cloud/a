@@ -2,128 +2,115 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-def run_premium_grid_scraper():
-    # مصدر الأخبار (RT رياضة) لضمان استقرار الصور
-    rss_url = "https://arabic.rt.com/rss/sport/"
-    # مصدر المباريات (YallaKora)
-    matches_url = "https://www.yallakora.com/match-center"
+def run_vortex_final_scraper():
+    # المصدر الجديد: سكاي نيوز عربية (الأكثر احترافية حالياً)
+    rss_url = "https://www.skynewsarabia.com/feeds/rss/sport.xml"
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     
     try:
+        # رابطك الربحي
         my_link = "https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9"
         
-        # 1. سحب المباريات (التصميم العلوي)
-        match_res = requests.get(matches_url, headers=headers, timeout=15)
-        match_res.encoding = 'utf-8'
-        match_soup = BeautifulSoup(match_res.content, 'lxml')
-        matches_html = ""
-        for league in match_soup.find_all('div', class_='matchCard')[:3]:
-            for m in league.find_all('div', class_='allMatchesList')[:1]:
-                t1 = m.find('div', class_='teamA').text.strip()
-                t2 = m.find('div', class_='teamB').text.strip()
-                res = m.find('div', class_='MResult').find_all('span')
-                score = f"{res[0].text}-{res[1].text}" if len(res) > 1 else "VS"
-                matches_html += f'''
-                <div class="m-card">
-                    <div class="m-team">{t1}</div>
-                    <div class="m-score">{score}</div>
-                    <div class="m-team">{t2}</div>
-                </div>'''
-
-        # 2. سحب الأخبار (تصميم المربعات Grid)
         response = requests.get(rss_url, headers=headers, timeout=20)
         response.encoding = 'utf-8'
         soup = BeautifulSoup(response.content, 'xml')
         items = soup.find_all('item')
         
-        news_grid_html = ""
-        for i, item in enumerate(items[:16]):
+        news_html = ""
+        for i, item in enumerate(items[:15]):
             title = item.title.text
-            img = item.find('enclosure').get('url') if item.find('enclosure') else "https://via.placeholder.com/400x300"
+            # سحب الصور بجودة عالية من سكاي نيوز
+            img = item.find('enclosure').get('url') if item.find('enclosure') else "https://via.placeholder.com/800x450"
             
-            news_grid_html += f'''
-            <div class="n-card">
-                <a href="{my_link}" target="_blank">
-                    <div class="n-img">
-                        <img src="{img}" loading="lazy">
-                        <div class="n-badge">حصري</div>
-                    </div>
-                    <div class="n-info">
-                        <h3>{title}</h3>
-                        <div class="n-footer">
-                            <span>⏱️ {datetime.now().strftime('%H:%M')}</span>
-                            <span class="n-more">التفاصيل</span>
+            if i == 0:
+                # الخبر الرئيسي (Hero) بتصميم كووورة الفخم
+                news_html += f'''
+                <div class="v-hero">
+                    <a href="{my_link}" target="_blank">
+                        <img src="{img}">
+                        <div class="v-hero-info">
+                            <span class="v-tag-live">تغطية خاصة</span>
+                            <h3>{title}</h3>
+                            <div class="v-meta">📅 {datetime.now().strftime('%d مارس 2026')}</div>
                         </div>
-                    </div>
-                </a>
-            </div>'''
+                    </a>
+                </div>'''
+            else:
+                # الأخبار التالية بتصميم كروت Vortex الاحترافي
+                news_html += f'''
+                <div class="v-premium-card">
+                    <a href="{my_link}" target="_blank">
+                        <div class="v-img-box">
+                            <img src="{img}" loading="lazy">
+                            <span class="v-exclusive">حصري</span>
+                        </div>
+                        <div class="v-details">
+                            <h3>{title}</h3>
+                            <div class="v-footer">
+                                <span class="v-time">{datetime.now().strftime('%H:%M')} ⏱️</span>
+                                <span class="v-btn">قراءة المزيد</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>'''
 
-        # 3. بناء الواجهة (Vortex-Grid UI)
         full_html = f'''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ستاديوم 24 | VORTEX</title>
+    <title>VORTEX 26 | NEWS</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {{ --bg: #0b0d11; --card: #161a21; --gold: #c5a059; --text: #e1e1e1; }}
-        body {{ background: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }}
+        :root {{ --v-bg: #0a0b0e; --v-card: #12151a; --v-gold: #c5a059; --v-white: #ffffff; }}
+        body {{ background: var(--v-bg); color: var(--v-white); font-family: 'Cairo', sans-serif; margin: 0; padding-bottom: 50px; }}
         
-        header {{ background: var(--card); padding: 15px 5%; display: flex; justify-content: space-between; border-bottom: 2px solid var(--gold); position: sticky; top: 0; z-index: 1000; }}
-        .logo {{ font-size: 24px; font-weight: 900; color: #fff; text-decoration: none; }}
-        .logo span {{ color: var(--gold); }}
+        header {{ background: var(--v-card); padding: 15px 8%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--v-gold); position: sticky; top: 0; z-index: 1000; }}
+        .v-logo {{ font-size: 26px; font-weight: 900; color: #fff; text-decoration: none; }}
+        .v-logo span {{ color: var(--v-gold); }}
 
-        .container {{ max-width: 1200px; margin: 20px auto; padding: 0 15px; }}
+        .v-main {{ max-width: 700px; margin: 0 auto; padding: 0 15px; }}
 
-        /* مركز المباريات العلوي (مثل كووورة) */
-        .match-scroller {{ display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 25px; scrollbar-width: none; }}
-        .m-card {{ background: var(--card); min-width: 180px; padding: 12px; border-radius: 12px; border: 1px solid #252a33; text-align: center; }}
-        .m-team {{ font-size: 12px; font-weight: bold; margin: 5px 0; }}
-        .m-score {{ background: var(--gold); color: #000; font-weight: 900; padding: 2px 8px; border-radius: 4px; display: inline-block; }}
+        /* تصميم الخبر الرئيسي */
+        .v-hero {{ position: relative; width: 100%; height: 380px; border-radius: 0 0 20px 20px; overflow: hidden; margin-bottom: 25px; border: 1px solid #1f242d; }}
+        .v-hero img {{ width: 100%; height: 100%; object-fit: cover; }}
+        .v-hero-info {{ position: absolute; bottom: 0; width: 100%; padding: 40px 20px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); box-sizing: border-box; }}
+        .v-tag-live {{ background: #ed1c24; padding: 2px 12px; font-size: 11px; font-weight: 900; border-radius: 4px; }}
+        .v-hero h3 {{ font-size: 22px; margin: 12px 0; line-height: 1.5; }}
 
-        /* شبكة الأخبار المربعة (مثل سكاي نيوز) */
-        .news-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }}
-        .n-card {{ background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #232932; transition: 0.3s; }}
-        .n-card:hover {{ transform: translateY(-5px); border-color: var(--gold); }}
-        .n-card a {{ text-decoration: none; color: inherit; }}
-        .n-img {{ position: relative; height: 180px; }}
-        .n-img img {{ width: 100%; height: 100%; object-fit: cover; }}
-        .n-badge {{ position: absolute; top: 10px; right: 10px; background: var(--gold); color: #000; font-size: 10px; font-weight: 900; padding: 3px 10px; border-radius: 5px; }}
+        /* تصميم الكروت المطورة */
+        .v-premium-card {{ background: var(--v-card); border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #1c2128; transition: 0.3s; }}
+        .v-premium-card:hover {{ border-color: var(--v-gold); transform: translateY(-3px); }}
+        .v-premium-card a {{ text-decoration: none; color: inherit; }}
+        .v-img-box {{ position: relative; width: 100%; height: 240px; }}
+        .v-img-box img {{ width: 100%; height: 100%; object-fit: cover; }}
+        .v-exclusive {{ position: absolute; top: 15px; right: 15px; background: var(--v-gold); color: #000; font-size: 10px; font-weight: 900; padding: 3px 10px; border-radius: 4px; }}
         
-        .n-info {{ padding: 15px; }}
-        .n-info h3 {{ font-size: 15px; margin: 0 0 15px 0; line-height: 1.6; height: 48px; overflow: hidden; font-weight: 700; }}
-        .n-footer {{ display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #888; }}
-        .n-more {{ color: var(--gold); border: 1px solid var(--gold); padding: 2px 10px; border-radius: 20px; }}
+        .v-details {{ padding: 20px; }}
+        .v-details h3 {{ font-size: 18px; margin: 0 0 20px; line-height: 1.6; font-weight: 700; }}
+        .v-footer {{ display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #232a33; padding-top: 15px; }}
+        .v-btn {{ color: var(--v-gold); font-size: 12px; font-weight: 900; text-transform: uppercase; border-bottom: 1px solid var(--v-gold); }}
+        .v-time {{ font-size: 11px; color: #777; }}
 
-        footer {{ background: #000; padding: 40px; text-align: center; border-top: 2px solid var(--gold); margin-top: 50px; }}
-        
-        @media (max-width: 768px) {{
-            .news-grid {{ grid-template-columns: 1fr; }}
-            .n-img {{ height: 220px; }}
+        @media (max-width: 600px) {{
+            .v-hero {{ height: 300px; }}
+            .v-img-box {{ height: 200px; }}
+            .v-details h3 {{ font-size: 16px; }}
         }}
     </style>
 </head>
 <body>
     <header>
-        <a href="#" class="logo">VORTEX<span>26</span></a>
-        <div style="color: #00ff88; font-size: 13px; font-weight: bold;">● مباشر</div>
+        <div style="color: #00ff88; font-size: 12px; font-weight: bold;">● مباشر الآن</div>
+        <a href="#" class="v-logo">VORTEX<span>26</span></a>
     </header>
 
-    <div class="container">
-        <div class="match-scroller">
-            {matches_html}
-        </div>
-
-        <h2 style="border-right: 5px solid var(--gold); padding-right: 15px; margin-bottom: 25px;">أبرز الأخبار الآن</h2>
-        <div class="news-grid">
-            {news_grid_html}
-        </div>
+    <div class="v-main">
+        {news_html}
     </div>
 
-    <footer>
-        <div style="font-size: 26px; font-weight: 900; color: #fff;">VORTEX 26</div>
-        <p style="font-size: 12px; color: #555;">تغطية رياضية عالمية بنمط المربعات الفخم</p>
+    <footer style="text-align: center; padding: 40px; font-size: 11px; color: #444;">
+        جميع الحقوق محفوظة لمنصة VORTEX 26 الإخبارية
     </footer>
 </body>
 </html>'''
@@ -132,4 +119,4 @@ def run_premium_grid_scraper():
     except Exception as e: print(f"Error: {e}")
 
 if __name__ == "__main__":
-    run_premium_grid_scraper()
+    run_vortex_final_scraper()
