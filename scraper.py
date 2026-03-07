@@ -1,117 +1,105 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-import random
 
-def run_stadium_pro():
+def run_kooora_clone():
     rss_url = "https://arabic.rt.com/rss/sport/"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+    headers = {'User-Agent': 'Mozilla/5.0'}
     
     try:
-        # رابطك الربحي الذكي
+        # رابطك الربحي
         my_link = "Https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default"
         
-        response = requests.get(rss_url, headers=headers, timeout=20)
+        response = requests.get(rss_url, headers=headers)
         response.encoding = 'utf-8'
         soup = BeautifulSoup(response.content, 'xml')
         items = soup.find_all('item')
 
-        # بناء شريط المباريات العلوي (Kooora Header Style)
-        matches_html = ""
-        leagues = ["الدوري الإسباني", "الدوري الإنجليزي", "دوري أبطال أوروبا"]
-        for league in leagues:
-            matches_html += f'''
-            <div class="match-card">
-                <div class="league-name">{league}</div>
-                <div class="teams">
-                    <span>فريق A</span>
-                    <span class="score">0 - 0</span>
-                    <span>فريق B</span>
-                </div>
-                <a href="{my_link}" target="_blank" class="match-details">تفاصيل المباراة</a>
-            </div>'''
-
-        # بناء قائمة الأخبار
-        news_html = ""
-        for i, item in enumerate(items[:20]):
-            title = item.title.text
-            link = item.link.text
-            img = item.find('enclosure').get('url') if item.find('enclosure') else "https://via.placeholder.com/600"
-            
-            news_html += f'''
-            <div class="kooora-news-item">
-                <a href="{my_link}" target="_blank" class="news-link">
-                    <div class="news-img"><img src="{img}" loading="lazy"></div>
-                    <div class="news-content">
-                        <h3>{title}</h3>
-                        <div class="news-meta">🏟️ كرة عالمية | ⏱️ منذ قليل</div>
-                    </div>
-                </a>
-            </div>'''
-            
-            # إعلان "حمل التطبيق" (مثل كووورة)
-            if i == 2:
-                news_html += f'''
-                <div class="kooora-ad-box">
-                    <a href="{my_link}" target="_blank">
-                        <img src="https://logodownload.org/wp-content/uploads/2019/07/kooora-logo.png" style="width:50px; margin-bottom:10px;">
-                        <p>تابع النتائج أولاً بأول عبر تطبيقنا</p>
-                        <div class="ad-btn">حمل التطبيق الآن</div>
-                    </a>
-                </div>'''
-
+        # كود HTML بتصميم كووورة الأصلي
         html_content = f'''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ستاديوم 24 | كووورة لايف</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>كووورة - Stadium 24</title>
     <style>
-        :root {{ --kooora-yellow: #ffcc00; --kooora-bg: #f4f4f4; --text: #333; }}
-        body {{ background: var(--kooora-bg); font-family: 'Cairo', sans-serif; margin: 0; padding-top: 60px; }}
+        body {{ background-color: #efefef; font-family: tahoma, arial, sans-serif; margin: 0; padding: 0; }}
+        header {{ background-color: #fff; border-bottom: 5px solid #ffcc00; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }}
+        .logo {{ font-weight: bold; font-size: 28px; color: #ffcc00; text-decoration: none; font-style: italic; }}
+        .logo span {{ color: #000; }}
         
-        /* Navbar */
-        nav {{ background: #fff; border-bottom: 3px solid var(--kooora-yellow); position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }}
-        .logo-text {{ font-weight: 900; font-size: 24px; color: #000; text-decoration: none; }}
-        .logo-text span {{ color: var(--kooora-yellow); }}
-        .live-dot {{ color: red; animation: blink 1s infinite; font-weight: bold; font-size: 14px; }}
-        @keyframes blink {{ 50% {{ opacity: 0; }} }}
+        /* شريط المباريات */
+        .matches-container {{ background: #fff; margin: 10px auto; max-width: 1000px; border: 1px solid #ccc; display: flex; overflow-x: auto; }}
+        .match-box {{ min-width: 150px; border-left: 1px solid #eee; padding: 10px; text-align: center; font-size: 12px; }}
+        .match-box .league {{ color: #999; font-size: 10px; display: block; }}
+        .match-box .score {{ background: #fdf2c4; font-weight: bold; padding: 2px 5px; margin: 5px 0; display: inline-block; }}
+        
+        /* القائمة الرئيسية */
+        nav {{ background: #333; color: #fff; padding: 8px 20px; font-size: 13px; font-weight: bold; }}
+        nav span {{ margin-left: 20px; cursor: pointer; }}
+        .live-icon {{ color: #ffcc00; }}
 
-        /* Matches Strip */
-        .matches-strip {{ display: flex; overflow-x: auto; background: #fff; padding: 10px; gap: 10px; border-bottom: 1px solid #ddd; }}
-        .match-card {{ min-width: 180px; background: #f9f9f9; border: 1px solid #eee; border-radius: 5px; padding: 10px; text-align: center; }}
-        .league-name {{ font-size: 10px; color: #888; margin-bottom: 5px; }}
-        .teams {{ font-size: 13px; font-weight: bold; margin-bottom: 5px; }}
-        .score {{ background: var(--kooora-yellow); padding: 2px 5px; border-radius: 3px; margin: 0 5px; }}
-        .match-details {{ font-size: 11px; color: #0066cc; text-decoration: none; }}
+        /* الأخبار */
+        .content-wrapper {{ max-width: 1000px; margin: 10px auto; display: flex; gap: 10px; }}
+        .main-news {{ background: #fff; flex: 3; border: 1px solid #ccc; padding: 10px; }}
+        .news-entry {{ border-bottom: 1px solid #eee; padding: 10px 0; display: flex; gap: 10px; }}
+        .news-entry img {{ width: 150px; height: 100px; object-fit: cover; border: 1px solid #ddd; }}
+        .news-entry h3 {{ margin: 0; font-size: 16px; color: #003366; }}
+        .news-entry a {{ text-decoration: none; }}
+        
+        /* الإعلانات */
+        .ad-banner {{ background: #fffde7; border: 1px solid #ffe58f; padding: 10px; text-align: center; margin-bottom: 10px; font-size: 14px; font-weight: bold; }}
+        .ad-link {{ color: #d4a017; text-decoration: none; }}
 
-        /* News Layout */
-        .main-grid {{ max-width: 800px; margin: 20px auto; padding: 0 10px; }}
-        .kooora-news-item {{ background: #fff; margin-bottom: 15px; border-radius: 5px; overflow: hidden; display: flex; border-bottom: 2px solid #eee; }}
-        .news-link {{ text-decoration: none; color: inherit; display: flex; width: 100%; }}
-        .news-img {{ width: 120px; height: 90px; flex-shrink: 0; }}
-        .news-img img {{ width: 100%; height: 100%; object-fit: cover; }}
-        .news-content {{ padding: 10px; flex-grow: 1; }}
-        .news-content h3 {{ font-size: 16px; margin: 0 0 10px 0; line-height: 1.4; }}
-        .news-meta {{ font-size: 11px; color: #888; }}
-
-        /* Ad Box */
-        .kooora-ad-box {{ background: #fffbe6; border: 1px dashed var(--kooora-yellow); padding: 20px; text-align: center; margin: 15px 0; border-radius: 5px; }}
-        .ad-btn {{ background: #000; color: #fff; padding: 8px 20px; border-radius: 20px; display: inline-block; margin-top: 10px; font-size: 13px; font-weight: bold; text-decoration: none; }}
+        @media (max-width: 600px) {{
+            .content-wrapper {{ flex-direction: column; }}
+            .news-entry img {{ width: 100px; height: 70px; }}
+        }}
     </style>
 </head>
 <body>
+    <header>
+        <a href="#" class="logo">K<span>OOORA</span></a>
+        <div style="font-size: 12px;">{datetime.now().strftime("%d مارس 2026")}</div>
+    </header>
+    
     <nav>
-        <a href="#" class="logo-text">ستاديوم<span>24</span></a>
-        <div><span class="live-dot">●</span> مباشر</div>
+        <span class="live-icon">● مباشر</span>
+        <span>مباريات اليوم</span>
+        <span>أخبار</span>
+        <span>مسابقات</span>
     </nav>
-    <div class="matches-strip">{matches_html}</div>
-    <div class="main-grid">{news_html}</div>
+
+    <div class="matches-container">
+        <div class="match-box"><span class="league">الدوري الإسباني</span><div>ريال مدريد</div><span class="score">2 - 0</span><div>سيلتا فيغو</div></div>
+        <div class="match-box"><span class="league">الدوري الإنجليزي</span><div>ليفربول</div><span class="score">1 - 1</span><div>مان سيتي</div></div>
+        <div class="match-box"><span class="league">الدوري الإيطالي</span><div>يوفنتوس</div><span class="score">0 - 0</span><div>إنتر ميلان</div></div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="main-news">
+            <div class="ad-banner">
+                <a href="{my_link}" target="_blank" class="ad-link">إعلان: حمل تطبيق كووورة الرسمي للحصول على التنبيهات مجاناً</a>
+            </div>
+            
+            {" ".join([f'''
+            <div class="news-entry">
+                <img src="{item.find('enclosure').get('url') if item.find('enclosure') else ''}">
+                <div>
+                    <a href="{my_link}" target="_blank"><h3>{item.title.text}</h3></a>
+                    <p style="font-size: 12px; color: #666;">{item.pubDate.text if item.pubDate else ''}</p>
+                </div>
+            </div>
+            ''' for item in items[:15]])}
+        </div>
+    </div>
 </body>
 </html>'''
 
-        with open("index.html", "w", encoding="utf-8") as f: f.write(html_content)
-    except Exception as e: print(f"Error: {e}")
+        with open("index.html", "w", encoding="utf-8") as f:
+            f.write(html_content)
+    except Exception as e:
+        print(f"Error: {e}")
 
-if __name__ == "__main__": run_stadium_pro()
+if __name__ == "__main__":
+    run_kooora_clone()
