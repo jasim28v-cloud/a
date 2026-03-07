@@ -3,163 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ستاديوم 24 | يلا كورة الترا</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>YallaKora 24 - مركز المباريات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --yk-blue: #004d9c; --bg: #f4f4f4; }
-        body { background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; padding-top: 70px; }
+        body { background: #f4f4f4; font-family: sans-serif; margin: 0; padding-top: 60px; }
+        header { background: #fff; padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #004d9c; position: fixed; top: 0; width: 100%; z-index: 1000; box-sizing: border-box; }
+        .yk-logo { font-size: 24px; font-weight: bold; color: #004d9c; text-decoration: none; }
         
-        nav { background: #fff; border-bottom: 4px solid var(--yk-blue); position: fixed; top: 0; width: 100%; height: 65px; display: flex; align-items: center; padding: 0 5%; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); box-sizing: border-box; }
-        .logo { font-size: 24px; font-weight: 900; color: var(--yk-blue); text-decoration: none; }
+        .section-head { background: #004d9c; color: #fff; padding: 12px; font-weight: bold; text-align: center; margin-top: 10px; }
         
-        .section-title { background: var(--yk-blue); color: #fff; padding: 15px; font-weight: 900; text-align: center; margin-top: 20px; }
-        
-        /* قسم الأخبار العلوي */
-        .news-container { max-width: 900px; margin: 0 auto; padding: 10px; }
-        .k-item { background: #fff; margin-bottom: 8px; border-bottom: 1px solid #ddd; }
-        .k-wrap { text-decoration: none; color: inherit; display: flex; }
-        .k-img { width: 120px; height: 85px; }
-        .k-img img { width: 100%; height: 100%; object-fit: cover; }
-        .k-info { padding: 10px; }
-        .k-info h2 { font-size: 15px; margin: 0; color: #333; }
-        
-        /* قسم يلا كورة السفلي */
-        .yk-container { max-width: 900px; margin: 20px auto; padding: 10px; }
-        .yk-league-head { background: #333; color: #fff; padding: 10px; font-size: 14px; font-weight: bold; }
-        .yk-match-row { background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
-        .yk-team { width: 30%; font-weight: bold; font-size: 13px; }
-        .yk-score { text-align: center; width: 30%; }
-        .yk-val { display: block; background: #fdf2c4; font-weight: 900; padding: 4px; border-radius: 4px; color: #d32f2f; }
-        .yk-time { font-size: 10px; color: #888; }
-        .yk-btn { background: var(--yk-blue); color: #fff; text-decoration: none; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
-        
-        .footer-logo { text-align: center; padding: 40px; background: #222; color: #fff; margin-top: 30px; }
+        .yk-news-card { background: #fff; border-bottom: 1px solid #eee; padding: 12px; }
+        .yk-news-card a { text-decoration: none; display: flex; justify-content: space-between; align-items: center; }
+        .yk-news-content { width: 70%; }
+        .yk-news-content h3 { font-size: 15px; color: #333; margin: 0; line-height: 1.5; }
+        .yk-news-card img { width: 90px; height: 65px; object-fit: cover; border-radius: 4px; }
+
+        .yk-l-header { background: #222; color: #fff; padding: 10px 15px; font-size: 13px; font-weight: bold; }
+        .yk-m-box { background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; }
+        .yk-t-name { width: 30%; font-weight: bold; font-size: 13px; text-align: center; }
+        .yk-m-info { text-align: center; width: 30%; }
+        .yk-score { display: block; background: #fdf2c4; font-weight: bold; padding: 4px; border-radius: 4px; color: #d32f2f; }
+        .yk-time { font-size: 10px; color: #888; display: block; margin: 3px 0; }
+        .yk-m-details { font-size: 10px; color: #fff; background: #004d9c; padding: 3px 10px; border-radius: 20px; text-decoration: none; font-weight: bold; }
+
+        footer { background: #000; color: #fff; padding: 40px 20px; text-align: center; margin-top: 20px; }
+        .f-apps img { width: 110px; margin: 10px 5px; }
+        .f-socials a { color: #fff; font-size: 22px; margin: 0 12px; }
     </style>
 </head>
 <body>
-    <nav><a href="#" class="logo">Yalla<span>Kora 24</span></a></nav>
+    <header><a href="#" class="yk-logo">YallaKora 24</a></header>
     
-    <div class="news-container">
-        <div class="section-title">آخر الأخبار الرياضية</div>
-        
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac375b42360463ff6c0bb3.jpeg" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>أرني سلوت يحث نجم ليفربول الصاعد على الاقتداء بمحمد صلاح</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+    <div class="section-head">آخر الأخبار الرياضية</div>
+    
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>أرني سلوت يحث نجم ليفربول الصاعد على الاقتداء بمحمد صلاح</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac375b42360463ff6c0bb3.jpeg" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac2eed42360464a47c8cd9.jpeg" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>الاتحادان الدولي والأوروبي لكرة اليد يعيدان المنتخبات الشبابية الروسية للمحافل الدولية</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>الاتحادان الدولي والأوروبي لكرة اليد يعيدان المنتخبات الشبابية الروسية للمحافل الدولية</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac2eed42360464a47c8cd9.jpeg" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac21924c59b71062425943.png" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>ترتيب الدوري المصري بعد فوز الزمالك على الاتحاد السكندري</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>ترتيب الدوري المصري بعد فوز الزمالك على الاتحاد السكندري</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac21924c59b71062425943.png" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac1e3e423604294e372dac.png" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>بوغاييف يهدي روسيا ميدالية ثانية في بارالمبياد "ميلانو- كورتينا 2026"</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>بوغاييف يهدي روسيا ميدالية ثانية في بارالمبياد "ميلانو- كورتينا 2026"</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac1e3e423604294e372dac.png" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac174d4c59b7092f5d3997.png" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>محرز يواصل تألقه في "ديربي جدة" ويتمسك بوعده لجماهير الأهلي</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>محرز يواصل تألقه في "ديربي جدة" ويتمسك بوعده لجماهير الأهلي</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac174d4c59b7092f5d3997.png" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac11964c59b70e3765e837.png" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>اعتقال شخص ادعى بأنه ابن ماردونا في قضية مخدرات</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>اعتقال شخص ادعى بأنه ابن ماردونا في قضية مخدرات</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac11964c59b70e3765e837.png" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac125a4c59b70c865886b1.jpg" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>برسالة غامضة على "إنستغرام".. زيزو يثير الجدل (فيديو -صورة)</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>برسالة غامضة على "إنستغرام".. زيزو يثير الجدل (فيديو -صورة)</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac125a4c59b70c865886b1.jpg" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac13184236042746012c72.png" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>روسيا تحرز أول ميدالية لها في دورة الألعاب البارالمبية بإيطاليا</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>روسيا تحرز أول ميدالية لها في دورة الألعاب البارالمبية بإيطاليا</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac13184236042746012c72.png" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac0eec423604267c7bbd5e.jpg" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>ترتيب الدوري الإسباني بعد فوز ريال مدريد على سيلتا فيغو</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>ترتيب الدوري الإسباني بعد فوز ريال مدريد على سيلتا فيغو</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac0eec423604267c7bbd5e.jpg" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac05dd4c59b7092f5d397d.jpg" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>رد فعل الوليد بن طلال بعد اكتساح الهلال للنجمة (فيديو)</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>رد فعل الوليد بن طلال بعد اكتساح الهلال للنجمة (فيديو)</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac05dd4c59b7092f5d397d.jpg" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abea034c59b70c1953ce2a.jpg" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>"اختفى الكارهون فجأة".. ردود أفعال جماهير ليفربول على أداء محمد صلاح أمام ولفرهامبتون (صور)</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>"اختفى الكارهون فجأة".. ردود أفعال جماهير ليفربول على أداء محمد صلاح أمام ولفرهامبتون (صور)</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abea034c59b70c1953ce2a.jpg" loading="lazy">
                 </a>
             </div>
-            <div class="k-item">
-                <a href="https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abdef5423604255c654ed4.jpg" loading="lazy"></div>
-                    <div class="k-info">
-                        <h2>دعوى قضائية جديدة تلاحق نيمار.. طباخة برازيلية سابقة تجره إلى المحاكم</h2>
-                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
+            <div class="yk-news-card">
+                <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                    <div class="yk-news-content">
+                        <h3>دعوى قضائية جديدة تلاحق نيمار.. طباخة برازيلية سابقة تجره إلى المحاكم</h3>
+                        <span>أخبار الرياضة | ⏱️ الآن</span>
                     </div>
+                    <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abdef5423604255c654ed4.jpg" loading="lazy">
                 </a>
             </div>
-    </div>
 
-    <div class="yk-container">
-        <div class="section-title">مركز المباريات (يلا كورة)</div>
-        <div class="yk-league-head">الدوري المصري</div><div class="yk-league-head">الدوري الإسباني</div><div class="yk-league-head">كأس الاتحاد الإنجليزي</div><div class="yk-league-head">الدوري الإيطالي</div>
-    </div>
+    <div class="section-head">جدول مباريات اليوم</div>
+    <div class="yk-l-header">الدوري المصري</div><div class="yk-l-header">الدوري الإسباني</div><div class="yk-l-header">كأس الاتحاد الإنجليزي</div><div class="yk-l-header">الدوري الإيطالي</div>
 
-    <div class="footer-logo">
-        <img src="https://logodownload.org/wp-content/uploads/2019/07/kooora-logo.png" style="width:100px; filter: brightness(0) invert(1);"><br>
-        <p>جميع الحقوق محفوظة لـ ستاديوم 24</p>
-    </div>
+    <footer>
+        <div style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">YallaKora</div>
+        <div class="f-apps">
+            <img src="https://yallakora.com/images/badget-app-store.png">
+            <img src="https://yallakora.com/images/badget-google-play.png">
+        </div>
+        <div class="f-socials">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p style="font-size: 12px; color: #888; margin-top: 20px;">© جميع الحقوق محفوظة لـ ملاعِب لايف 2026</p>
+    </footer>
 </body>
 </html>
