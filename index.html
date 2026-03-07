@@ -3,51 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سكاي نيوز عربية | رياضة</title>
+    <title>ستاديوم نيوز | أخبار الرياضة</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background: #fff; font-family: 'Noto Kufi Arabic', sans-serif; margin: 0; }
+        body { background: #fff; font-family: 'Noto Kufi Arabic', sans-serif; margin: 0; padding: 0; }
         
-        /* تصميم الهيدر بنفس شكل سكاي نيوز في الصورة */
-        .sky-header { background: #fff; border-bottom: 1px solid #eee; padding: 10px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
-        .sky-logo { display: flex; align-items: center; text-decoration: none; }
-        .sky-logo-black { background: #000; color: #fff; padding: 5px 10px; font-weight: 900; font-size: 22px; margin-left: 5px; }
-        .sky-logo-red { color: #ed1c24; font-weight: 900; font-size: 22px; }
-        .sky-live-btn { background: #ed1c24; color: #fff; padding: 3px 15px; font-weight: bold; font-size: 14px; border-radius: 3px; }
+        /* الهيدر المطابق لسكاي نيوز في الصورة */
+        .header-sky { background: #fff; border-bottom: 2px solid #ed1c24; padding: 12px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
+        .brand-sky { display: flex; align-items: center; text-decoration: none; }
+        .brand-black { background: #000; color: #fff; padding: 4px 12px; font-weight: 900; font-size: 26px; letter-spacing: -1px; }
+        .brand-red { color: #ed1c24; font-weight: 900; font-size: 26px; padding-right: 6px; }
+        .live-tag { background: #ed1c24; color: #fff; padding: 4px 18px; font-weight: bold; font-size: 14px; border-radius: 2px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
-        .sky-main-hero { width: 100%; position: relative; height: 60vh; overflow: hidden; border-bottom: 8px solid #ed1c24; }
-        .sky-main-hero img { width: 100%; height: 100%; object-fit: cover; }
-        .sky-overlay { position: absolute; bottom: 0; width: 100%; padding: 30px 5%; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: #fff; }
-        .sky-tag { background: #ed1c24; color: #fff; padding: 2px 10px; font-size: 12px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
-        .sky-overlay h3 { font-size: 24px; margin: 5px 0; }
+        /* الخبر الرئيسي (عرض الشاشة) */
+        .sky-hero-main { position: relative; width: 100%; height: 55vh; overflow: hidden; }
+        .sky-hero-main img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .sky-hero-main:hover img { transform: scale(1.03); }
+        .sky-hero-text { position: absolute; bottom: 0; width: 100%; padding: 40px 5%; background: linear-gradient(transparent, rgba(0,0,0,0.9)); color: #fff; box-sizing: border-box; }
+        .sky-hero-text h3 { font-size: 26px; margin: 10px 0; font-weight: 900; line-height: 1.5; }
+        .sky-label-live { background: #ed1c24; padding: 2px 10px; font-size: 12px; font-weight: bold; border-radius: 2px; }
 
-        .sky-sub-card { padding: 15px; border-bottom: 1px solid #eee; display: flex; gap: 15px; }
-        .sky-sub-card img { width: 120px; height: 80px; object-fit: cover; }
-        .sky-sub-card h3 { font-size: 16px; margin: 0; color: #333; }
+        /* قائمة الأخبار (التصميم الأفقي مثل الصورة) */
+        .sky-list { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
+        .sky-item-card { border-bottom: 1px solid #f0f0f0; padding: 15px 0; }
+        .sky-item-card a { text-decoration: none; }
+        .sky-card-flex { display: flex; gap: 20px; align-items: flex-start; }
+        .sky-card-img { width: 180px; height: 110px; flex-shrink: 0; overflow: hidden; border-radius: 4px; }
+        .sky-card-img img { width: 100%; height: 100%; object-fit: cover; }
+        .sky-card-info h3 { font-size: 17px; color: #222; margin: 0 0 10px; line-height: 1.5; font-weight: 700; transition: 0.3s; }
+        .sky-card-info:hover h3 { color: #ed1c24; }
+        .sky-meta { font-size: 12px; color: #888; display: block; }
 
-        .sky-league-title { background: #f8f8f8; padding: 10px; font-weight: bold; color: #ed1c24; border-right: 4px solid #ed1c24; margin-top: 20px; }
-        .sky-match-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; align-items: center; font-size: 14px; }
-        .sky-score { font-weight: 900; background: #333; color: #fff; padding: 2px 10px; border-radius: 4px; }
+        @media (max-width: 768px) {
+            .sky-hero-main { height: 40vh; }
+            .sky-hero-text h3 { font-size: 19px; }
+            .sky-card-img { width: 120px; height: 80px; }
+            .sky-card-info h3 { font-size: 14px; }
+        }
     </style>
 </head>
 <body>
-    <div class="sky-header">
-        <div class="sky-logo">
-            <span class="sky-logo-black">sky</span>
-            <span class="sky-logo-red">news عربية</span>
-        </div>
-        <div class="sky-live-btn">مباشر</div>
+    <div class="header-sky">
+        <a href="#" class="brand-sky">
+            <span class="brand-black">stadium</span>
+            <span class="brand-red">news 24</span>
+        </a>
+        <div class="live-tag">مباشر</div>
     </div>
 
     
-    
-    <div style="padding: 20px;">
-        <h2 style="border-bottom: 2px solid #ed1c24; display: inline-block;">مركز المباريات</h2>
-        <div class="sky-league-title">الدوري المصري</div><div class="sky-league-title">الدوري الإسباني</div><div class="sky-league-title">كأس الاتحاد الإنجليزي</div>
-    </div>
+                <div class="sky-hero-main">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac3ed44c59b70b5444888e.png" alt="Breaking News">
+                        <div class="sky-hero-text">
+                            <span class="sky-label-live">عاجل</span>
+                            <h3>رئيس "الفيفا" يفاجئ الركراكي بعد رحيله عن تدريب المنتخب المغربي</h3>
+                        </div>
 
-    <div class="more-news">
+    <div class="sky-list">
+        <h2 style="border-right: 5px solid #ed1c24; padding-right: 15px; font-size: 20px; margin-bottom: 25px;">آخر الأخبار الرياضية</h2>
         
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac375b42360463ff6c0bb3.jpeg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>أرني سلوت يحث نجم ليفربول الصاعد على الاقتداء بمحمد صلاح</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac2eed42360464a47c8cd9.jpeg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>الاتحادان الدولي والأوروبي لكرة اليد يعيدان المنتخبات الشبابية الروسية للمحافل الدولية</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac21924c59b71062425943.png" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>ترتيب الدوري المصري بعد فوز الزمالك على الاتحاد السكندري</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac1e3e423604294e372dac.png" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>بوغاييف يهدي روسيا ميدالية ثانية في بارالمبياد "ميلانو- كورتينا 2026"</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac174d4c59b7092f5d3997.png" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>محرز يواصل تألقه في "ديربي جدة" ويتمسك بوعده لجماهير الأهلي</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac11964c59b70e3765e837.png" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>اعتقال شخص ادعى بأنه ابن ماردونا في قضية مخدرات</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac125a4c59b70c865886b1.jpg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>برسالة غامضة على "إنستغرام".. زيزو يثير الجدل (فيديو -صورة)</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac13184236042746012c72.png" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>روسيا تحرز أول ميدالية لها في دورة الألعاب البارالمبية بإيطاليا</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac0eec423604267c7bbd5e.jpg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>ترتيب الدوري الإسباني بعد فوز ريال مدريد على سيلتا فيغو</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ac05dd4c59b7092f5d397d.jpg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>رد فعل الوليد بن طلال بعد اكتساح الهلال للنجمة (فيديو)</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abea034c59b70c1953ce2a.jpg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>"اختفى الكارهون فجأة".. ردود أفعال جماهير ليفربول على أداء محمد صلاح أمام ولفرهامبتون (صور)</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abdef5423604255c654ed4.jpg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>دعوى قضائية جديدة تلاحق نيمار.. طباخة برازيلية سابقة تجره إلى المحاكم</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abda844c59b701e0259e1b.jpg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>إيفان توني يكشف سر احتفاله المثير في ديربي جدة (فيديو - صور)</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69abd77f423604267c7bbd27.jpg" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>محمد صلاح يتفوق على واين روني ويرد عليه في الملعب (فيديو)</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ab54b04c59b701f02746c8.png" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>ريال مدريد ينتزع فوزا "قاتلا" على سيلتا فيغو في الدوري الإسباني</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ab4fdd4c59b701ff3843d5.png" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>ليفربول يتخطى وولفرهامبتون ويبلغ ربع نهائي كأس الاتحاد الإنجليزي</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="sky-item-card">
+                    <a href="https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9" target="_blank">
+                        <div class="sky-card-flex">
+                            <div class="sky-card-img">
+                                <img src="https://mf.b37mrtl.ru/media/pics/2026.03/thumbnail/69ab458e4c59b70135095cdb.png" alt="news">
+                            </div>
+                            <div class="sky-card-info">
+                                <h3>الهلال يكتسح النجمة برباعية في ليلة تألق بنزيما</h3>
+                                <span class="sky-meta">أخبار الرياضة | RT</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
     </div>
+
+    <footer style="background: #111; color: #fff; padding: 50px 20px; text-align: center; border-top: 5px solid #ed1c24;">
+        <div style="font-size: 26px; font-weight: 900; margin-bottom: 10px;">stadium news 24</div>
+        <p style="font-size: 12px; opacity: 0.6;">تغطية عالمية شاملة بمصداقية عالية</p>
+    </footer>
 </body>
 </html>
