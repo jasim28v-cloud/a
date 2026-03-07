@@ -3,132 +3,128 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import random
 
-def run_stadium_ultra():
-    rss_url = "https://arabic.rt.com/rss/sport/"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
+def run_ultra_hybrid():
+    # روابط المصادر
+    news_rss = "https://arabic.rt.com/rss/sport/"
+    matches_url = "https://www.yallakora.com/match-center"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     
     try:
-        # الرابط الربحي الترا (Direct Link)
-        my_link = "Https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default"
+        # رابطك الربحي الذكي
+        my_link = "https://data527.click/21330bf1d025d41336e6/57154ac610/?placementName=default"
         
-        response = requests.get(rss_url, headers=headers, timeout=20)
-        response.encoding = 'utf-8'
-        soup = BeautifulSoup(response.content, 'xml')
-        items = soup.find_all('item')
-
-        # 1. توليد جدول مباريات "وهمي" احترافي (لجذب النقرات)
-        matches_list = [
-            {"l": "الدوري الإسباني", "t1": "ريال مدريد", "t2": "برشلونة", "s": "21:00"},
-            {"l": "الدوري الإنجليزي", "t1": "ليفربول", "t2": "مان سيتي", "s": "18:30"},
-            {"l": "دوري أبطال أوروبا", "t1": "بايرن ميونخ", "t2": "باريس", "s": "مباشر"}
-        ]
+        # 1. جلب الأخبار
+        news_res = requests.get(news_rss, headers=headers)
+        news_res.encoding = 'utf-8'
+        news_soup = BeautifulSoup(news_res.content, 'xml')
+        items = news_soup.find_all('item')
         
-        matches_html = ""
-        for m in matches_list:
-            matches_html += f'''
-            <div class="m-item">
-                <span class="m-lg">{m['l']}</span>
-                <div class="m-teams">
-                    <span>{m['t1']}</span>
-                    <span class="m-vs">{m['s']}</span>
-                    <span>{m['t2']}</span>
-                </div>
-                <a href="{my_link}" target="_blank" class="m-link">التفاصيل</a>
-            </div>'''
-
-        # 2. معالجة الأخبار بتنسيق Prime Ultra
         news_html = ""
-        for i, item in enumerate(items[:25]):
+        for i, item in enumerate(items[:12]):
             title = item.title.text
             img = item.find('enclosure').get('url') if item.find('enclosure') else "https://via.placeholder.com/600x400"
-            
-            # قالب الخبر "طبق الأصل" كووورة
             news_html += f'''
             <div class="k-item">
                 <a href="{my_link}" target="_blank" class="k-wrap">
-                    <div class="k-img"><img src="{img}" alt="news"></div>
+                    <div class="k-img"><img src="{img}" loading="lazy"></div>
                     <div class="k-info">
                         <h2>{title}</h2>
-                        <div class="k-meta">
-                            <span class="k-cat">كرة قدم عالمية</span>
-                            <span class="k-time">⏱️ منذ قليل</span>
-                        </div>
+                        <div class="k-meta"><span class="k-cat">أخبار الرياضة</span></div>
                     </div>
                 </a>
             </div>'''
+
+        # 2. جلب جدول مباريات "يلا كورة" للواجهة السفلية
+        match_res = requests.get(matches_url, headers=headers)
+        match_res.encoding = 'utf-8'
+        match_soup = BeautifulSoup(match_res.content, 'lxml')
+        
+        leagues = match_soup.find_all('div', class_='matchCard')
+        matches_section = ""
+        for league in leagues[:4]:
+            l_name = league.find('h2').text.strip() if league.find('h2') else "بطولة عامة"
+            matches_section += f'<div class="yk-league-head">{l_name}</div>'
             
-            # بنر إعلاني "برايم" في منتصف الأخبار
-            if i == 3:
-                news_html += f'''
-                <div class="k-ad-prime">
-                    <a href="{my_link}" target="_blank">
-                        <div class="ad-tag">حصري</div>
-                        <h3>شاهد البث المباشر لمباريات اليوم بجودة عالية 📺</h3>
-                        <p>اضغط هنا للدخول لصفحة البث المباشر</p>
-                    </a>
+            all_m = league.find_all('div', class_='allMatchesList')
+            for m in all_m:
+                t1 = m.find('div', class_='teamA').text.strip()
+                t2 = m.find('div', class_='teamB').text.strip()
+                score = m.find('div', class_='MResult').find_all('span')
+                score_txt = f"{score[0].text} - {score[1].text}" if len(score) > 1 else "لم تبدأ"
+                time = m.find('span', class_='time').text.strip()
+                
+                matches_section += f'''
+                <div class="yk-match-row">
+                    <div class="yk-team">{t1}</div>
+                    <div class="yk-score">
+                        <span class="yk-val">{score_txt}</span>
+                        <span class="yk-time">{time}</span>
+                    </div>
+                    <div class="yk-team">{t2}</div>
+                    <a href="{my_link}" target="_blank" class="yk-btn">تفاصيل</a>
                 </div>'''
 
-        # 3. بناء صفحة HTML الترا
+        # 3. بناء الصفحة النهائية
         full_html = f'''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ستاديوم 24 | كووورة الترا</title>
+    <title>ستاديوم 24 | يلا كورة الترا</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {{ --main: #ffcc00; --bg: #efefef; --dark: #333; }}
-        body {{ background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; padding-top: 110px; }}
+        :root {{ --yk-blue: #004d9c; --bg: #f4f4f4; }}
+        body {{ background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; padding-top: 70px; }}
         
-        /* Navbar Prime */
-        nav {{ background: #fff; border-bottom: 4px solid var(--main); position: fixed; top: 0; width: 100%; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
-        .nav-top {{ display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; }}
-        .logo {{ font-size: 30px; font-weight: 900; color: #000; text-decoration: none; font-style: italic; }}
-        .logo span {{ color: var(--main); }}
-        .live-btn {{ background: red; color: #fff; padding: 2px 10px; border-radius: 4px; font-size: 12px; animation: blink 1s infinite; }}
-        @keyframes blink {{ 50% {{ opacity: 0; }} }}
-
-        /* Matches Ultra Strip */
-        .m-strip {{ background: #fff; display: flex; overflow-x: auto; padding: 10px; gap: 10px; border-bottom: 1px solid #ddd; }}
-        .m-item {{ min-width: 160px; background: #fafafa; border: 1px solid #eee; border-radius: 4px; padding: 8px; text-align: center; }}
-        .m-lg {{ font-size: 10px; color: #999; display: block; }}
-        .m-teams {{ font-size: 12px; font-weight: bold; margin: 5px 0; display: flex; justify-content: space-between; align-items: center; }}
-        .m-vs {{ background: #fff2c4; padding: 2px 5px; font-size: 10px; border-radius: 3px; }}
-        .m-link {{ font-size: 11px; color: #0066cc; text-decoration: none; font-weight: bold; }}
-
-        /* News Layout Ultra */
-        .container {{ max-width: 900px; margin: 0 auto; padding: 10px; }}
-        .k-item {{ background: #fff; margin-bottom: 10px; border-bottom: 1px solid #ddd; transition: 0.3s; }}
+        nav {{ background: #fff; border-bottom: 4px solid var(--yk-blue); position: fixed; top: 0; width: 100%; height: 65px; display: flex; align-items: center; padding: 0 5%; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); box-sizing: border-box; }}
+        .logo {{ font-size: 24px; font-weight: 900; color: var(--yk-blue); text-decoration: none; }}
+        
+        .section-title {{ background: var(--yk-blue); color: #fff; padding: 15px; font-weight: 900; text-align: center; margin-top: 20px; }}
+        
+        /* قسم الأخبار العلوي */
+        .news-container {{ max-width: 900px; margin: 0 auto; padding: 10px; }}
+        .k-item {{ background: #fff; margin-bottom: 8px; border-bottom: 1px solid #ddd; }}
         .k-wrap {{ text-decoration: none; color: inherit; display: flex; }}
-        .k-img {{ width: 140px; height: 95px; flex-shrink: 0; }}
+        .k-img {{ width: 120px; height: 85px; }}
         .k-img img {{ width: 100%; height: 100%; object-fit: cover; }}
-        .k-info {{ padding: 10px; flex-grow: 1; }}
-        .k-info h2 {{ font-size: 16px; margin: 0 0 8px 0; color: #003366; line-height: 1.4; }}
-        .k-meta {{ font-size: 11px; color: #888; display: flex; gap: 15px; }}
-        .k-cat {{ color: #d4a017; font-weight: bold; }}
-
-        /* Ad Prime Ultra */
-        .k-ad-prime {{ background: #fffbe6; border: 2px dashed var(--main); margin: 15px 0; padding: 20px; text-align: center; border-radius: 8px; }}
-        .k-ad-prime a {{ text-decoration: none; color: #333; }}
-        .ad-tag {{ background: var(--main); display: inline-block; padding: 2px 12px; border-radius: 20px; font-size: 10px; font-weight: 900; }}
-        .k-ad-prime h3 {{ margin: 10px 0; color: #d32f2f; }}
-
-        @media (max-width: 600px) {{ .k-img {{ width: 110px; height: 80px; }} .k-info h2 {{ font-size: 14px; }} }}
+        .k-info {{ padding: 10px; }}
+        .k-info h2 {{ font-size: 15px; margin: 0; color: #333; }}
+        
+        /* قسم يلا كورة السفلي */
+        .yk-container {{ max-width: 900px; margin: 20px auto; padding: 10px; }}
+        .yk-league-head {{ background: #333; color: #fff; padding: 10px; font-size: 14px; font-weight: bold; }}
+        .yk-match-row {{ background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }}
+        .yk-team {{ width: 30%; font-weight: bold; font-size: 13px; }}
+        .yk-score {{ text-align: center; width: 30%; }}
+        .yk-val {{ display: block; background: #fdf2c4; font-weight: 900; padding: 4px; border-radius: 4px; color: #d32f2f; }}
+        .yk-time {{ font-size: 10px; color: #888; }}
+        .yk-btn {{ background: var(--yk-blue); color: #fff; text-decoration: none; font-size: 11px; padding: 4px 8px; border-radius: 4px; }}
+        
+        .footer-logo {{ text-align: center; padding: 40px; background: #222; color: #fff; margin-top: 30px; }}
     </style>
 </head>
 <body>
-    <nav>
-        <div class="nav-top">
-            <a href="#" class="logo">K<span>OOORA</span> 24</a>
-            <div class="live-btn">● مباشر الآن</div>
-        </div>
-        <div class="m-strip">{matches_html}</div>
-    </nav>
-    <div class="container">{news_html}</div>
+    <nav><a href="#" class="logo">Yalla<span>Kora 24</span></a></nav>
+    
+    <div class="news-container">
+        <div class="section-title">آخر الأخبار الرياضية</div>
+        {news_html}
+    </div>
+
+    <div class="yk-container">
+        <div class="section-title">مركز المباريات (يلا كورة)</div>
+        {matches_section}
+    </div>
+
+    <div class="footer-logo">
+        <img src="https://logodownload.org/wp-content/uploads/2019/07/kooora-logo.png" style="width:100px; filter: brightness(0) invert(1);"><br>
+        <p>جميع الحقوق محفوظة لـ ستاديوم 24</p>
+    </div>
 </body>
 </html>'''
 
         with open("index.html", "w", encoding="utf-8") as f: f.write(full_html)
     except Exception as e: print(f"Error: {e}")
 
-if __name__ == "__main__": run_stadium_ultra()
+if __name__ == "__main__":
+    run_ultra_hybrid()
