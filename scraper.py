@@ -1,164 +1,153 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-import random
 
-def run_world_class_scraper():
-    # مصادر البيانات المتقدمة
-    news_rss = "https://arabic.rt.com/rss/sport/"
-    matches_url = "https://www.yallakora.com/match-center"
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
+def run_infinity_scraper():
+    base_url = "https://www.yallakora.com"
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
     
     try:
-        # رابطك الربحي الذهبي
+        # رابطك الربحي المعتمد في ملفاتك
         my_link = "https://www.effectivegatecpm.com/t3rvmzpu?key=26330eef1cb397212db567d1385dc0b9"
         
-        # 1. جلب الأخبار بنظام الـ Cards الحديث
-        news_res = requests.get(news_rss, headers=headers, timeout=15)
+        # 1. سحب أخبار "يلا كورة" الحصرية
+        news_res = requests.get(f"{base_url}/news", headers=headers, timeout=15)
         news_res.encoding = 'utf-8'
-        news_soup = BeautifulSoup(news_res.content, 'xml')
-        items = news_soup.find_all('item')
-        
+        news_soup = BeautifulSoup(news_res.content, 'lxml')
         news_html = ""
-        for i, item in enumerate(items[:15]):
-            title = item.title.text
-            img = item.find('enclosure').get('url') if item.find('enclosure') else "https://via.placeholder.com/400x250"
+        
+        for item in news_soup.find_all('div', class_='desc')[:12]:
+            title = item.find('h3').text.strip() if item.find('h3') else ""
+            img_tag = item.find_previous('img')
+            img = img_tag.get('data-src') or img_tag.get('src') if img_tag else "https://via.placeholder.com/400x250"
+            
             news_html += f'''
-            <div class="prime-card">
+            <div class="news-card">
                 <a href="{my_link}" target="_blank">
-                    <div class="card-img-wrap">
+                    <div class="img-container">
                         <img src="{img}" loading="lazy">
-                        <div class="card-badge">حصري</div>
+                        <span class="news-tag">LIVE</span>
                     </div>
-                    <div class="card-body">
+                    <div class="news-info">
                         <h3>{title}</h3>
-                        <div class="card-footer-info">⏱️ منذ قليل | 🏟️ تغطية عالمية</div>
+                        <div class="news-meta">🏟️ كرة قدم عالمية | ⏱️ {datetime.now().strftime('%H:%M')}</div>
                     </div>
                 </a>
             </div>'''
 
-        # 2. جلب المباريات بنظام Live Scoreboard من يلا كورة
-        match_res = requests.get(matches_url, headers=headers, timeout=15)
+        # 2. سحب المباريات الحية
+        match_res = requests.get(f"{base_url}/match-center", headers=headers, timeout=15)
         match_res.encoding = 'utf-8'
         match_soup = BeautifulSoup(match_res.content, 'lxml')
-        leagues = match_soup.find_all('div', class_='matchCard')
+        matches_html = ""
         
-        matches_section = ""
-        for league in leagues[:5]:
-            l_name = league.find('h2').text.strip() if league.find('h2') else "بطولة كبرى"
-            matches_section += f'<div class="league-header-ultra">{l_name}</div>'
-            for m in league.find_all('div', class_='allMatchesList')[:3]:
+        for league in match_soup.find_all('div', class_='matchCard')[:4]:
+            l_name = league.find('h2').text.strip()
+            matches_html += f'<div class="league-separator">{l_name}</div>'
+            for m in league.find_all('div', class_='allMatchesList')[:2]:
                 t1 = m.find('div', class_='teamA').text.strip()
                 t2 = m.find('div', class_='teamB').text.strip()
                 res = m.find('div', class_='MResult').find_all('span')
-                score = f"{res[0].text} - {res[1].text}" if len(res) > 1 else "vs"
+                score = f"{res[0].text} - {res[1].text}" if len(res) > 1 else "VS"
                 time = m.find('span', class_='time').text.strip()
-                matches_section += f'''
-                <div class="ultra-match-item">
-                    <div class="u-team">{t1}</div>
-                    <div class="u-score-area">
-                        <span class="u-score-val">{score}</span>
-                        <span class="u-time">{time}</span>
+                matches_html += f'''
+                <div class="match-item">
+                    <div class="m-team">{t1}</div>
+                    <div class="m-result">
+                        <div class="m-score">{score}</div>
+                        <div class="m-time">{time}</div>
                     </div>
-                    <div class="u-team">{t2}</div>
-                    <a href="{my_link}" target="_blank" class="u-btn-live">متابعة</a>
+                    <div class="m-team">{t2}</div>
+                    <a href="{my_link}" target="_blank" class="m-details">متابعة</a>
                 </div>'''
 
-        # 3. بناء الواجهة الأسطورية
+        # 3. بناء الواجهة (The Infinity UI)
         full_html = f'''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ستاديوم 24 | القمة الرياضية</title>
+    <title>Infinity Stadium 24</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root {{ --p: #004d9c; --s: #ffcc00; --dark: #121212; --bg: #f8f9fa; }}
-        body {{ background: var(--bg); font-family: 'Cairo', sans-serif; margin: 0; }}
+        :root {{ --gold: #c5a059; --dark-bg: #0b0e11; --card-bg: #15191d; --text: #e1e1e1; }}
+        body {{ background: var(--dark-bg); color: var(--text); font-family: 'Cairo', sans-serif; margin: 0; padding-bottom: 50px; }}
         
-        /* Navbar */
-        nav {{ background: var(--p); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }}
-        .nav-logo {{ font-size: 26px; font-weight: 900; color: #fff; text-decoration: none; }}
-        .nav-logo span {{ color: var(--s); }}
-        .live-pulse {{ background: #ff4757; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; animation: pulse 1.5s infinite; }}
-        @keyframes pulse {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0.4; }} 100% {{ opacity: 1; }} }}
+        /* Glassmorphism Navbar */
+        nav {{ background: rgba(21, 25, 29, 0.95); backdrop-filter: blur(10px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--gold); }}
+        .logo {{ font-size: 26px; font-weight: 900; color: #fff; text-decoration: none; text-transform: uppercase; }}
+        .logo span {{ color: var(--gold); }}
 
-        /* Layout */
-        .main-wrapper {{ max-width: 1100px; margin: 20px auto; display: grid; grid-template-columns: 1fr 350px; gap: 20px; padding: 0 15px; }}
+        /* Main Grid Layout */
+        .container {{ max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: 1fr 380px; gap: 25px; padding: 0 15px; }}
         
-        /* News Grid */
-        .news-grid {{ display: grid; grid-template-columns: 1fr; gap: 15px; }}
-        .prime-card {{ background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }}
-        .prime-card:hover {{ transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }}
-        .prime-card a {{ text-decoration: none; color: inherit; display: flex; }}
-        .card-img-wrap {{ width: 160px; height: 110px; position: relative; flex-shrink: 0; }}
-        .card-img-wrap img {{ width: 100%; height: 100%; object-fit: cover; }}
-        .card-badge {{ position: absolute; top: 5px; right: 5px; background: var(--s); font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px; }}
-        .card-body {{ padding: 12px; flex-grow: 1; }}
-        .card-body h3 {{ font-size: 16px; margin: 0 0 10px 0; color: #333; line-height: 1.4; }}
-        .card-footer-info {{ font-size: 11px; color: #888; }}
+        /* News Section */
+        .news-title {{ font-size: 22px; font-weight: 900; border-right: 5px solid var(--gold); padding-right: 15px; margin-bottom: 20px; }}
+        .news-card {{ background: var(--card-bg); border-radius: 15px; margin-bottom: 15px; overflow: hidden; transition: 0.3s; border: 1px solid #232a31; }}
+        .news-card:hover {{ transform: scale(1.02); border-color: var(--gold); }}
+        .news-card a {{ text-decoration: none; color: inherit; display: flex; }}
+        .img-container {{ width: 180px; height: 120px; position: relative; flex-shrink: 0; }}
+        .img-container img {{ width: 100%; height: 100%; object-fit: cover; }}
+        .news-tag {{ position: absolute; top: 8px; right: 8px; background: #e02f2f; color: white; padding: 2px 8px; font-size: 10px; font-weight: bold; border-radius: 4px; }}
+        .news-info {{ padding: 15px; display: flex; flex-direction: column; justify-content: center; }}
+        .news-info h3 {{ font-size: 16px; margin: 0 0 10px 0; line-height: 1.5; color: #fff; }}
+        .news-meta {{ font-size: 11px; color: #888; }}
 
-        /* Match Center Sidebar */
-        .sidebar {{ background: #fff; border-radius: 12px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); align-self: start; }}
-        .league-header-ultra {{ background: var(--dark); color: #fff; padding: 8px 12px; font-size: 13px; font-weight: bold; margin: 15px 0 10px 0; border-radius: 4px; }}
-        .ultra-match-item {{ display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }}
-        .u-team {{ width: 35%; font-size: 12px; font-weight: bold; text-align: center; }}
-        .u-score-area {{ width: 30%; text-align: center; }}
-        .u-score-val {{ display: block; background: #fdf2c4; padding: 3px; border-radius: 4px; font-weight: 900; color: #d32f2f; }}
-        .u-time {{ font-size: 10px; color: #999; }}
-        .u-btn-live {{ display: block; margin-top: 5px; background: var(--p); color: #fff; text-decoration: none; font-size: 10px; padding: 2px 8px; border-radius: 4px; }}
+        /* Live Score Sidebar */
+        .sidebar {{ background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid #232a31; align-self: start; }}
+        .league-separator {{ background: var(--gold); color: #000; padding: 5px 15px; font-size: 12px; font-weight: bold; margin: 20px 0 10px 0; border-radius: 5px; }}
+        .match-item {{ display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #232a31; }}
+        .m-team {{ width: 35%; font-size: 12px; font-weight: bold; text-align: center; color: #fff; }}
+        .m-result {{ width: 30%; text-align: center; }}
+        .m-score {{ background: #232a31; color: var(--gold); font-weight: 900; padding: 5px; border-radius: 8px; font-size: 14px; margin-bottom: 4px; }}
+        .m-time {{ font-size: 10px; color: #888; }}
+        .m-details {{ display: block; background: var(--gold); color: #000; text-decoration: none; font-size: 10px; font-weight: bold; padding: 4px; border-radius: 5px; margin-top: 5px; }}
 
-        /* Footer Modern */
-        footer {{ background: #000; color: #fff; padding: 50px 20px; text-align: center; margin-top: 50px; border-top: 5px solid var(--s); }}
-        .f-apps img {{ width: 120px; margin: 10px; transition: 0.3s; }}
-        .f-apps img:hover {{ opacity: 0.7; }}
-        .f-socials {{ margin: 30px 0; }}
-        .f-socials a {{ color: #fff; font-size: 24px; margin: 0 15px; text-decoration: none; }}
-        .f-bottom {{ border-top: 1px solid #333; padding-top: 20px; font-size: 12px; color: #777; }}
+        /* Footer Black Pearl */
+        footer {{ background: #000; padding: 60px 20px; text-align: center; margin-top: 50px; border-top: 2px solid var(--gold); }}
+        .f-logo {{ font-size: 32px; font-weight: 900; color: #fff; margin-bottom: 20px; }}
+        .f-socials a {{ color: var(--gold); font-size: 24px; margin: 0 15px; }}
+        .f-apps img {{ width: 130px; margin: 15px 10px; border: 1px solid #333; border-radius: 8px; }}
 
         @media (max-width: 900px) {{
-            .main-wrapper {{ grid-template-columns: 1fr; }}
+            .container {{ grid-template-columns: 1fr; }}
             .sidebar {{ order: -1; }}
-            .card-img-wrap {{ width: 120px; height: 90px; }}
-            .card-body h3 {{ font-size: 14px; }}
+            .img-container {{ width: 130px; height: 90px; }}
         }}
     </style>
 </head>
 <body>
     <nav>
-        <a href="#" class="nav-logo">STADIUM<span>24</span></a>
-        <div class="live-pulse">● مباشر</div>
+        <a href="#" class="logo">INFINITY<span>24</span></a>
+        <div style="color: var(--gold); font-size: 12px; font-weight: bold;"><i class="fas fa-circle" style="color: #e02f2f; font-size: 8px;"></i> مباشر الآن</div>
     </nav>
 
-    <div class="main-wrapper">
-        <div class="news-grid">
-            <h2 style="border-right: 4px solid var(--p); padding-right: 15px; margin-bottom: 20px;">أحدث الأخبار</h2>
+    <div class="container">
+        <div class="news-section">
+            <div class="news-title">أحدث التقارير الرياضية</div>
             {news_html}
         </div>
 
         <div class="sidebar">
-            <h2 style="margin-top:0; color: var(--p);"><i class="fas fa-trophy"></i> مركز المباريات</h2>
-            {matches_section}
+            <h2 style="margin:0; font-size: 20px; color: var(--gold);"><i class="fas fa-bolt"></i> مركز النتائج الحية</h2>
+            {matches_html}
         </div>
     </div>
 
     <footer>
-        <div style="font-size: 30px; font-weight: 900; margin-bottom: 10px;">YallaKora <span style="color: var(--s);">24</span></div>
-        <p>موقعك الرياضي الأول لمتابعة النتائج والأخبار لحظة بلحظة</p>
+        <div class="f-logo">INFINITY STADIUM</div>
+        <div class="f-socials">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
         <div class="f-apps">
             <img src="https://yallakora.com/images/badget-app-store.png">
             <img src="https://yallakora.com/images/badget-google-play.png">
         </div>
-        <div class="f-socials">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-        </div>
-        <div class="f-bottom">
-            <p>© جميع الحقوق محفوظة لـ ملاعب لايف | تم التطوير بأحدث تقنيات 2026</p>
-        </div>
+        <p style="font-size: 12px; color: #444; margin-top: 30px;">تم التطوير بواسطة ذكاء ستاديوم المتقدم 2026</p>
     </footer>
 </body>
 </html>'''
@@ -166,5 +155,4 @@ def run_world_class_scraper():
         with open("index.html", "w", encoding="utf-8") as f: f.write(full_html)
     except Exception as e: print(f"Error: {e}")
 
-if __name__ == "__main__":
-    run_world_class_scraper()
+if __name__ == "__main__": run_infinity_scraper()
